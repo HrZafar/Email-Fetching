@@ -33,11 +33,13 @@ if not (os.path.exists('email_ids.xlsx')):
 wb = load_workbook('email_ids.xlsx')
 sheet = wb.active
 sheet.column_dimensions['A'].width = 30
-sheet.column_dimensions['B'].width = 60
-sheet.column_dimensions['C'].width = 60
+sheet.column_dimensions['B'].width = 30
+sheet.column_dimensions['C'].width = 30
+sheet.column_dimensions['D'].width = 60
 sheet.cell(row=1, column=1).value = 'Date'
-sheet.cell(row=1, column=2).value = 'To'
-sheet.cell(row=1, column=3).value = 'From'
+sheet.cell(row=1, column=2).value = 'Sender Name'
+sheet.cell(row=1, column=3).value = 'Sender Email Id'
+sheet.cell(row=1, column=4).value = 'To'
 wb.save('email_ids.xlsx')
 
 username = "example@gmail.com"
@@ -79,9 +81,16 @@ while curr_date >= oldest_date:
         # adding data to excel file
         current_row = sheet.max_row
         sheet.cell(row=current_row + 1, column=1).value = msg['Date']
-        sheet.cell(row=current_row + 1, column=2).value = msg['To']
-        sheet.cell(row=current_row + 1, column=3).value = msg['From']
+        if '<' in msg['From']:
+            sender=msg['From'].split('<')
+            sender[1]=sender[1][0:-1]
+            sheet.cell(row=current_row + 1, column=2).value = sender[0]
+            sheet.cell(row=current_row + 1, column=3).value = sender[1]
+        else:
+            sheet.cell(row=current_row + 1, column=3).value = msg['From']
+        sheet.cell(row=current_row + 1, column=4).value = msg['To']
 
     # saving excel file
     wb.save('email_ids.xlsx')
+
     curr_date = curr_date - timedelta(days=1)
