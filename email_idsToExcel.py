@@ -1,3 +1,9 @@
+#########################################
+##  requires IMAP enabled on gmail     ##
+##  requires less secure apps turn on  ##
+#########################################
+
+
 import email
 import imaplib
 from datetime import *
@@ -82,8 +88,8 @@ while curr_date >= oldest_date:
         current_row = sheet.max_row
         sheet.cell(row=current_row + 1, column=1).value = msg['Date']
         if '<' in msg['From']:
-            sender=msg['From'].split('<')
-            sender[1]=sender[1][0:-1]
+            sender = msg['From'].split('<')
+            sender[1] = sender[1][0:-1]
             sheet.cell(row=current_row + 1, column=2).value = sender[0]
             sheet.cell(row=current_row + 1, column=3).value = sender[1]
         else:
